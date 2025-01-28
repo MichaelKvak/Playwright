@@ -1,0 +1,16 @@
+{
+  "name": "Michael",
+  "invalidName": "Михайло",
+  "wrongLengthName": "M",
+  "lastName": "Kvak",
+  "invalidLastName": "Квак",
+  "wrongLengthLastName": "K",
+  "email": "mkvak1987@gmail.com",
+  "wrongEmail": "mkvak1987",
+  "password": "5Nintr1v1xsc",
+  "wrongPassword": "rrr",
+  "repeatPasswordSuccess": "5Nintr1v1xsc",
+  "repeatPasswordWrong": "5Nintr1v1xsc1",
+  "correctEmail": "mkvak@gmail.com",
+  "correctPassword": "Barselona-1987"
+}

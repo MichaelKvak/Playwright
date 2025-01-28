@@ -1,72 +1,64 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page } from "@playwright/test";
 
-class SignUpForm {
-  private readonly page: Page;
+export default class SignUpForm {
+  readonly form: Page;
+  readonly signUpButton: Locator;
+  readonly registerButton: Locator;
+  readonly nameField: Locator;
+  readonly lastNameField: Locator;
+  readonly emailField: Locator;
+  readonly passwordField: Locator;
+  readonly repeatPasswordField: Locator;
 
   constructor(page: Page) {
-    this.page = page;
+    this.form = page;
+    this.nameField = page.locator("#signupName");
+    this.lastNameField = page.locator("#signupLastName");
+    this.signUpButton = page.locator('//*[contains(@class, "btn-primary")]');
+    this.registerButton = page.locator(".modal-content .btn-primary");
+    this.emailField = page.locator('//input[@id="signupEmail"]');
+    this.passwordField = page.locator('//input[@id="signupPassword"]');
+    this.repeatPasswordField = page.locator(
+      '//input[@id="signupRepeatPassword"]'
+    );
   }
 
-  get nameField(): Locator {
-    return this.page.locator('#signupName');
+  // private formatInput(input: string): string {
+  //   return input.trim().replace(/\s+/g, "");
+  // }
+
+  async enterName(name: string) {
+    await this.nameField.fill(name);
   }
 
-  get lastNameField(): Locator {
-    return this.page.locator('#signupLastName');
+  async enterLastName(lastName: string) {
+    await this.lastNameField.fill(lastName);
   }
 
-  get emailField(): Locator {
-    return this.page.locator('#signupEmail');
+  async enterEmail(email: string) {
+    await this.emailField.fill(email);
   }
 
-  get passwordField(): Locator {
-    return this.page.locator('#signupPassword');
+  async enterPassword(password: string) {
+    await this.passwordField.fill(password);
   }
 
-  get repeatPasswordField(): Locator {
-    return this.page.locator('#signupRepeatPassword');
+  async enterRepeatPassword(password: string) {
+    await this.repeatPasswordField.fill(password);
   }
 
-  get registerButton(): Locator {
-    return this.page.locator('.modal-content .btn-primary');
-  }
-
-  get errorMessage(): Locator {
-    return this.page.locator('.invalid-feedback p');
-  }
-
-  private formatInput(input: string): string {
-    return input.trim().replace(/\s+/g, '');
-  }
-
-  async enterName(name: string): Promise<void> {
-    await this.nameField.fill(this.formatInput(name));
-  }
-
-  async enterLastName(lastName: string): Promise<void> {
-    await this.lastNameField.fill(this.formatInput(lastName));
-  }
-
-  async enterEmail(email: string): Promise<void> {
-    await this.emailField.fill(this.formatInput(email));
-  }
-
-  async enterPassword(password: string): Promise<void> {
-    await this.passwordField.fill(this.formatInput(password));
-  }
-
-  async enterRepeatPassword(password: string): Promise<void> {
-    await this.repeatPasswordField.fill(this.formatInput(password));
-  }
-
-  async clickRegisterButton(): Promise<void> {
+  async clickRegisterButton() {
     await this.registerButton.click();
   }
 
-  async triggerErrorMessageForField(field: Locator): Promise<void> {
-    await field.focus();
-    await field.blur();
+  async triggerErrorOnField(fieldName: string) {
+    const element = fieldName === "name" ? this.nameField : this.lastNameField;
+    await element.focus();
+    await element.blur();
   }
-}
 
-export default SignUpForm;
+  //   async triggerErrorMessageForField() {
+  //     await this.nameField.focus();
+  //     await this.nameField.blur();
+  //   }
+}
