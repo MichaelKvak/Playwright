@@ -3,7 +3,7 @@ import HomePage from '../page-objects/pages/HomePage';
 import SignInForm from '../page-objects/forms/SignInForm';
 import { SIGNIN_EMPTY_EMAIL, SIGNIN_EMPTY_PASSWORD, SIGNIN_INVALID_EMAIL, SIGNIN_WRONG_DATA } from '../test-data/constants/errors.ts';
 
-test.describe(('Sign In tests with POM'), () => {
+test.describe('Sign In tests POM', () => {
     let homePage: HomePage;
     let signInForm: SignInForm;
 
@@ -25,7 +25,7 @@ test.describe(('Sign In tests with POM'), () => {
         await expect(page.getByText(SIGNIN_EMPTY_PASSWORD)).toBeVisible();
     });
 
-    test('Sign In with wrong password/email', async ({ page }) => {
+    test('Sign In wrong password/email', async ({ page }) => {
         await signInForm.loginWithCredentials('example@test777.com', 'test777')
         await expect(page.getByText(SIGNIN_WRONG_DATA)).toBeVisible();
     });
@@ -45,7 +45,7 @@ test.describe(('Sign In tests with POM'), () => {
         await expect(page.getByRole('heading', { name: 'Registration' })).toBeVisible();
     });
 
-    test('Sign in with invalid email', async ({ page }) => {
+    test('Sign in invalid email', async ({ page }) => {
         await signInForm.enterEmail('notvalid');
         await signInForm.triggerErrorOnField('email');
         await expect(page.getByRole('paragraph')).toContainText(SIGNIN_INVALID_EMAIL);
