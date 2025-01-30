@@ -10,7 +10,8 @@
   "password": "5Nintr1v1xsc",
   "wrongPassword": "rrr",
   "repeatPasswordSuccess": "5Nintr1v1xsc",
-  "repeatPasswordWrong": "5Nintr1v1xsc1",
+  "repeatPasswordWrong": "5",
+  "repeatPasswordDoNotMatch": "5Nintr1v1xsc17",
   "correctEmail": "mkvak@gmail.com",
   "correctPassword": "Barselona-1987"
 }

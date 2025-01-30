@@ -3,10 +3,18 @@ import HomePage from "../page-objects/pages/HomePage.ts";
 import SignUpForm from "../page-objects/forms/signUpForm.ts";
 import {
   SIGNUP_NAME,
-  SIGNUP_LAST_NAME,
+  SIGNUP_WRONGLENGTH_NAME,  
   SIGNUP_INVALID_NAME,
+  SIGNUP_LAST_NAME,
   SIGNUP_INVALID_LAST_NAME,
+  SIGNUP_WRONGLENGTH_LAST_NAME,
   SIGNUP_EMPTY_EMAIL,
+  SIGNUP_WRONG_EMAIL,
+  SIGNUP_EMPTY_PASSWORD,
+  SIGNUP_WRONG_PASSWORD,
+  SIGNUP_WRONG_REENTER_PASSWORD,
+  SIGNUP_EMPTY_REENTER_PASSWORD,
+  SIGNUP_DO_NOT_MATCH_REENTER_PASSWORD
 } from "../test-data/constants/errors.ts";
 
 import { createRequire } from "module";
@@ -33,129 +41,137 @@ test.describe("Sign Up Check Test", () => {
   });
 
   test("Should check Sign Up with invalid Name field", async ({ page }) => {
-    await signUpForm.triggerErrorOnField("name");
+    await signUpForm.triggerErrorOnNameAndLastNameField("name");
     await expect(page.getByText(SIGNUP_NAME)).toBeVisible();
 
-    await signUpForm.triggerErrorOnField("lastName");
+    await page.waitForTimeout(1000); // For test UI visualization only (bad practice)
+
+    await signUpForm.enterName(data.invalidName);
+    await expect(page.getByText(SIGNUP_INVALID_NAME)).toContainText(
+      "Name is invalid"
+    );
+
+    await page.waitForTimeout(1000); // For test UI visualization only (bad practice)
+
+    await signUpForm.enterName(data.wrongLengthName);
+    const errorText = page.getByText(SIGNUP_WRONGLENGTH_NAME);    
+    await expect(errorText).toHaveText("Name has to be from 2 to 20 characters long");
+    await expect(errorText).toHaveCSS("color", "rgb(220, 53, 69)");
+    await signUpForm.enterLastName(data.lastName);
+    await signUpForm.enterEmail(data.email);
+    await signUpForm.enterPassword(data.password);
+    await signUpForm.enterRepeatPassword(data.repeatPasswordSuccess);
+    await expect(signUpForm.registerButton).toBeDisabled();
+  });
+
+  test("Should check Sign Up with invalid Last Name field", async ({ page }) => {
+    await signUpForm.enterName(data.name);
+
+    await signUpForm.triggerErrorMessageForField(signUpForm.lastNameField);
     await expect(page.getByText(SIGNUP_LAST_NAME)).toBeVisible();
+
+    await page.waitForTimeout(500); // For test UI visualization only (bad practice)
 
     await signUpForm.enterLastName(data.invalidLastName);
     await expect(page.getByText(SIGNUP_INVALID_LAST_NAME)).toContainText(
       "Last name is invalid"
     );
 
-    // await signUpForm.enterName(testData.wrongLengthName);
-    // await expect(signUpForm.errorMessage).toContainText(
-    //   "Name has to be from 2 to 20 characters long"
-    // );
+    await page.waitForTimeout(1000); // For test UI visualization only (bad practice)
 
-    // await signUpForm.enterLastName(testData.lastName);
-    // await signUpForm.enterEmail(testData.email);
-    // await signUpForm.enterPassword(testData.password);
-    // await signUpForm.enterRepeatPassword(testData.repeatPasswordSuccess);
-    // await expect(signUpForm.registerButton).toBeDisabled();
+    await signUpForm.enterLastName(data.wrongLengthLastName);
+    const errorText = page.getByText(SIGNUP_WRONGLENGTH_LAST_NAME);
+    await expect(errorText).toHaveText("Last name has to be from 2 to 20 characters long");
+    await expect(errorText).toHaveCSS("color", "rgb(220, 53, 69)");
+
+    await signUpForm.enterEmail(data.email);
+    await signUpForm.enterPassword(data.password);
+    await signUpForm.enterRepeatPassword(data.repeatPasswordSuccess);
+    await expect(signUpForm.registerButton).toBeDisabled();   
   });
 
-  // test("Should check Sign Up with invalid Last Name field", async ({
-  //   page,
-  // }) => {
-  //   const signUpForm = new SignUpForm(page);
-  //   await signUpForm.enterName(testData.name);
-  //   await signUpForm.triggerErrorMessageForField(signUpForm.lastNameField);
-  //   await expect(signUpForm.errorMessage).toContainText("Last name required");
+  test("Should check Sign Up with invalid Email field", async ({ page }) => {
+    await signUpForm.enterName(data.name);
+    await signUpForm.enterLastName(data.lastName);
 
-  //   await signUpForm.enterLastName(testData.invalidLastName);
-  //   await expect(signUpForm.errorMessage).toContainText("Last name is invalid");
+    await signUpForm.triggerErrorMessageForField(signUpForm.emailField);
+    await expect(page.getByText(SIGNUP_EMPTY_EMAIL)).toBeVisible();
 
-  //   await signUpForm.enterLastName(testData.wrongLengthLastName);
-  //   await expect(signUpForm.errorMessage).toContainText(
-  //     "Last name has to be from 2 to 20 characters long"
-  //   );
+    await page.waitForTimeout(1000); // For test UI visualization only (bad practice)
 
-  //   await signUpForm.enterEmail(testData.email);
-  //   await signUpForm.enterPassword(testData.password);
-  //   await signUpForm.enterRepeatPassword(testData.repeatPasswordSuccess);
-  //   await expect(signUpForm.registerButton).toBeDisabled();
-  // });
+    await signUpForm.enterEmail(data.wrongEmail);
+    const errorText = page.getByText(SIGNUP_WRONG_EMAIL);
+    await expect(errorText).toHaveText("Email is incorrect");
+    await expect(errorText).toHaveCSS("color", "rgb(220, 53, 69)");    
+   
+    await signUpForm.enterPassword(data.password);
+    await signUpForm.enterRepeatPassword(data.repeatPasswordSuccess);
+    await expect(signUpForm.registerButton).toBeDisabled();   
+  });
 
-  // test("Should check Sign Up with invalid Email field", async ({ page }) => {
-  //   const signUpForm = new SignUpForm(page);
-  //   await signUpForm.enterName(testData.name);
-  //   await signUpForm.enterLastName(testData.lastName);
-  //   await signUpForm.triggerErrorMessageForField(signUpForm.emailField);
-  //   await expect(signUpForm.errorMessage).toContainText("Email required");
+  test("Should check Sign Up with invalid Password field", async ({ page }) => {
+    await signUpForm.enterName(data.name); 
+    await signUpForm.enterLastName(data.lastName);   
+    await signUpForm.enterEmail(data.email);    
 
-  //   await signUpForm.enterEmail(testData.wrongEmail);
-  //   await expect(signUpForm.errorMessage).toContainText("Email is incorrect");
+    await signUpForm.triggerErrorMessageForField(signUpForm.passwordField);
+    await expect(page.getByText(SIGNUP_EMPTY_PASSWORD)).toBeVisible();
 
-  //   await signUpForm.enterPassword(testData.password);
-  //   await signUpForm.enterRepeatPassword(testData.repeatPasswordSuccess);
-  //   await expect(signUpForm.registerButton).toBeDisabled();
-  // });
+    await page.waitForTimeout(1000); // For test UI visualization only (bad practice)
 
-  // test("Should check Sign Up with invalid Password field", async ({ page }) => {
-  //   const signUpForm = new SignUpForm(page);
-  //   await signUpForm.enterName(testData.name);
-  //   await signUpForm.enterLastName(testData.lastName);
-  //   await signUpForm.enterEmail(testData.email);
-  //   await signUpForm.triggerErrorMessageForField(signUpForm.passwordField);
-  //   await expect(signUpForm.errorMessage).toContainText("Password required");
+    await signUpForm.enterPassword(data.wrongPassword);
+    await expect(page.getByText(SIGNUP_WRONG_PASSWORD)).toContainText(
+      "Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter"
+    );   
+    await signUpForm.enterRepeatPassword(data.repeatPasswordSuccess);    
+    await expect(signUpForm.registerButton).toBeDisabled();
+  });
 
-  //   await signUpForm.enterPassword(testData.wrongPassword);
-  //   await expect(signUpForm.errorMessage).toContainText(
-  //     "Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter"
-  //   );
+  test("Should check Sign Up with mismatched Re-enter password field", async ({ page }) => {
+    await signUpForm.enterName(data.name); 
+    await signUpForm.enterLastName(data.lastName);   
+    await signUpForm.enterEmail(data.email);
+    await signUpForm.enterPassword(data.password);  
 
-  //   await signUpForm.enterRepeatPassword(testData.repeatPasswordSuccess);
-  //   await expect(signUpForm.errorMessage).toContainText(
-  //     "Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter"
-  //   );
-  //   await expect(signUpForm.registerButton).toBeDisabled();
-  // });
+    await signUpForm.triggerErrorMessageForField(signUpForm.repeatPasswordField);
+    await expect(page.getByText(SIGNUP_EMPTY_REENTER_PASSWORD)).toBeVisible();
 
-  // test("Should check Sign Up with mismatched Re-enter password field", async ({
-  //   page,
-  // }) => {
-  //   const signUpForm = new SignUpForm(page);
-  //   await signUpForm.enterName(testData.name);
-  //   await signUpForm.enterLastName(testData.lastName);
-  //   await signUpForm.enterEmail(testData.email);
-  //   await signUpForm.enterPassword(testData.password);
+    await page.waitForTimeout(1000); // For test UI visualization only (bad practice)
 
-  //   await signUpForm.triggerErrorMessageForField(
-  //     signUpForm.repeatPasswordField
-  //   );
-  //   await expect(signUpForm.errorMessage).toContainText(
-  //     "Re-enter password required"
-  //   );
+    await signUpForm.enterRepeatPassword(data.repeatPasswordWrong);
+    await expect(page.getByText(SIGNUP_WRONG_REENTER_PASSWORD)).toContainText(
+      "Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter"
+    );
 
-  //   await signUpForm.enterRepeatPassword(testData.repeatPasswordWrong);
-  //   await expect(signUpForm.errorMessage).toContainText(
-  //     "Passwords do not match"
-  //   );
-  //   await expect(signUpForm.registerButton).toBeDisabled();
-  // });
+    await page.waitForTimeout(1000); // For test UI visualization only (bad practice)
 
-  // test("Should check Sign Up with correct data", async ({ page }) => {
-  //   const signUpForm = new SignUpForm(page);
+    await signUpForm.enterRepeatPassword(data.repeatPasswordDoNotMatch);
+    await expect(page.getByText(SIGNUP_DO_NOT_MATCH_REENTER_PASSWORD)).toContainText(
+      "Passwords do not match"
+    );
+    await expect(signUpForm.registerButton).toBeDisabled();
+  });
+   
+  test("Should check Sign Up with correct data", async ({ page }) => {
+    const signUpForm = new SignUpForm(page);
 
-  //   await page.route("/api/auth/signup", (route) => {
-  //     route.fulfill({
-  //       status: 201,
-  //       body: JSON.stringify({ status: "ok" }),
-  //     });
-  //   });
+    await page.route("/api/auth/signup", (route) => {
+      route.fulfill({
+        status: 201,
+        body: JSON.stringify({ status: "ok" }),
+      });
+    });
 
-  //   await signUpForm.enterName(testData.name);
-  //   await signUpForm.enterLastName(testData.lastName);
-  //   await signUpForm.enterEmail(randomEmail);
-  //   await signUpForm.enterPassword(testData.password);
-  //   await signUpForm.enterRepeatPassword(testData.repeatPasswordSuccess);
+    await signUpForm.enterName(data.name);
+    await signUpForm.enterLastName(data.lastName);
+    await signUpForm.enterEmail(randomEmail);
+    await signUpForm.enterPassword(data.password);
+    await signUpForm.enterRepeatPassword(data.repeatPasswordSuccess);
 
-  //   await expect(signUpForm.registerButton).toBeEnabled();
-  //   await signUpForm.clickRegisterButton();
+    await expect(signUpForm.registerButton).toBeEnabled();
+    await signUpForm.clickRegisterButton();
 
-  //   await page.waitForURL("https://qauto.forstudy.space/panel/garage");
-  //   await expect(page.url()).toBe("https://qauto.forstudy.space/panel/garage");
-  // });
+    await page.waitForURL("https://guest:welcome2qauto@qauto.forstudy.space/");
+    expect(page.url()).toBe("https://guest:welcome2qauto@qauto.forstudy.space/");
+  });
 });

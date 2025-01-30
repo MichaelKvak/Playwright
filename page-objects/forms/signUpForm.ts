@@ -23,10 +23,6 @@ export default class SignUpForm {
     );
   }
 
-  // private formatInput(input: string): string {
-  //   return input.trim().replace(/\s+/g, "");
-  // }
-
   async enterName(name: string) {
     await this.nameField.fill(name);
   }
@@ -51,14 +47,14 @@ export default class SignUpForm {
     await this.registerButton.click();
   }
 
-  async triggerErrorOnField(fieldName: string) {
+  async triggerErrorOnNameAndLastNameField(fieldName: string) {
     const element = fieldName === "name" ? this.nameField : this.lastNameField;
     await element.focus();
     await element.blur();
   }
 
-  //   async triggerErrorMessageForField() {
-  //     await this.nameField.focus();
-  //     await this.nameField.blur();
-  //   }
+     async triggerErrorMessageForField(field: Locator) {
+      await field.focus();
+      await field.blur();
+    }
 }
