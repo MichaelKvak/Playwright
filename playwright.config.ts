@@ -1,5 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -34,9 +34,9 @@ export default defineConfig({
   //   trace: "on-first-retry",
   // },
   use: {
-    baseURL: `https://${process.env.AUTH_LOGIN}:${process.env.AUTH_PASS}@${process.env.BASE_URL}`,
+    baseURL: `https://${process.env.USER_NAME}:${process.env.PASSWORD}@${process.env.BASE_URL}`,
 
-    trace: 'on-first-retry',
+    trace: "on-first-retry",
   },
   /* Configure projects for major browsers */
   projects: [
