@@ -213,8 +213,8 @@ test.describe("Sign Up Check Test", () => {
 
     await expect(signUpForm.registerButton).toBeEnabled();
     await signUpForm.clickRegisterButton();
-
-    await page.waitForURL("https://guest:welcome2qauto@qauto.forstudy.space/");
-    expect(page.url()).toBe("https://guest:welcome2qauto@qauto.forstudy.space/");
+    
+    await page.waitForURL('https://guest:welcome2qauto@qauto2.forstudy.space/panel/garage');
+    expect(page.url()).toBe('https://guest:welcome2qauto@qauto2.forstudy.space/panel/garage');
   });
 });
