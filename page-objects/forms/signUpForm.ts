@@ -53,8 +53,12 @@ export default class SignUpForm {
     await element.blur();
   }
 
-     async triggerErrorMessageForField(field: Locator) {
+  async triggerErrorMessageForField(field: Locator) {
       await field.focus();
       await field.blur();
+    }
+
+  async triggerField(field: Locator) {
+      await field.focus();
     }
 }

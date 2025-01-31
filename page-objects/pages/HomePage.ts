@@ -20,6 +20,6 @@ export default class HomePage {
   }
 
   async openPage() {
-    await this.page.goto("/");
+    await this.page.goto("https://guest:welcome2qauto@qauto.forstudy.space/");
   }
 }
