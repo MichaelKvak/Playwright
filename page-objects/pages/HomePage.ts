@@ -1,5 +1,4 @@
 import { Locator, Page } from "@playwright/test";
-
 export default class HomePage {
   readonly page: Page;
   readonly signInButton: Locator;
@@ -20,6 +19,6 @@ export default class HomePage {
   }
 
   async openPage() {
-    await this.page.goto("https://guest:welcome2qauto@qauto.forstudy.space/");
+    await this.page.goto('/');
   }
 }
