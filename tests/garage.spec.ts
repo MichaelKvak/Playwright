@@ -21,26 +21,20 @@ test.describe("Garage Page", () => {
       credentials.userOne.password
     );
   });
-  test("Add BMW X6", async () => {
-    await garagePage.addCarByBrandAndModel("BMW", "X6", "500");
-    await garagePage.verifyLastAddedCar("BMW X6");
-  });
-
-  test("Add Audi TT", async () => {
-    await garagePage.addCarByBrandAndModel("Audi", "TT", "500");
-    await garagePage.verifyLastAddedCar("Audi TT");
-  });
-
-  test("Add Ford Fiesta", async () => {
-    await garagePage.addCarByBrandAndModel("Ford", "Fiesta", "500");
-    await garagePage.verifyLastAddedCar("Ford Fiesta");
+  test("Add BMW 3 series", async () => {
+    await garagePage.addCarByBrandAndModel("BMW", "3", "500");
+    await garagePage.verifyLastAddedCar("BMW 3");
   });
 
   test("Update mileage", async () => {
-    await garagePage.updateCarMileage("2000");
+    await garagePage.updateCarMileage('BMW 3','5000');
   });
 
-  test.afterEach(async () => {
+  test('Update car data', async () => {
+   await garagePage.editCarData('Audi', 'TT', '7000');
+  });
+
+  test.afterAll(async () => {
     await garagePage.removeLastAddedCar();
   });
 });
