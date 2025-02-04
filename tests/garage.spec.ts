@@ -1,8 +1,9 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, _baseTest } from "@playwright/test";
 import HomePage from "../page-objects/pages/HomePage";
 import SignInForm from "../page-objects/forms/SignInForm";
 import GaragePage from "../page-objects/pages/GaragePage";
 import { credentials } from "../test-data/usersData";
+import { GARAGE_EMPTY_MILEAGE } from "../test-data/constants/errors.ts";
 
 test.describe("Garage Page", () => {
   let homePage: HomePage;
@@ -21,17 +22,26 @@ test.describe("Garage Page", () => {
       credentials.userOne.password
     );
   });
+
+  test("Update car without mileage data", async ({ page }) => {
+    await garagePage.clickAddCarButton();
+    await garagePage.triggerErrorMessageForField(garagePage.mileageField);
+    await expect(page.getByText(GARAGE_EMPTY_MILEAGE)).toContainText(
+      "Mileage cost required"
+    );
+  });
+
   test("Add BMW 3 series", async () => {
     await garagePage.addCarByBrandAndModel("BMW", "3", "500");
     await garagePage.verifyLastAddedCar("BMW 3");
   });
 
   test("Update mileage", async () => {
-    await garagePage.updateCarMileage('BMW 3','5000');
+    await garagePage.updateCarMileage("BMW 3", "5000");
   });
 
-  test('Update car data', async () => {
-   await garagePage.editCarData('Audi', 'TT', '7000');
+  test("Update car data", async () => {
+    await garagePage.editCarData("Audi", "TT", "7000");
   });
 
   test.afterAll(async () => {
