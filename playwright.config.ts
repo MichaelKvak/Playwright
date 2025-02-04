@@ -8,7 +8,6 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
-
 console.log("🔹 Загруженные переменные:");
 console.log("BASE_URL:", process.env.BASE_URL);
 console.log("USER_NAME:", process.env.USER_NAME);
