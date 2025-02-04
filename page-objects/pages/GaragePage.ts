@@ -17,6 +17,7 @@ export default class GaragePage {
   readonly carRemoveNotification: Locator;
   readonly editCarButton: Locator;
   readonly saveButton: Locator;
+  readonly cancelButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -34,6 +35,9 @@ export default class GaragePage {
     );
     this.saveButton = page.locator(
       '//div[contains(@class, "modal-footer")]//button[contains(@class, "btn btn-primary") and text()="Save"]'
+    );
+    this.cancelButton = page.locator(
+      '//div[contains(@class, "modal-footer")]//button[contains(@class, "btn btn-secondary") and text()="Cancel"]'
     );
     this.lastAddedCar = page.locator('//div[@class="car jumbotron"]').first();
     this.carNameLocator = '//p[@class="car_name h2"]';
@@ -96,6 +100,10 @@ export default class GaragePage {
 
   async clickEditCarButton() {
     await this.editCarButton.click();
+  }
+
+  async clickCancelButton() {
+    await this.cancelButton.click();
   }
 
   async editCarData(brand: string, model: string, mileage: string) {

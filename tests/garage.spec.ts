@@ -23,12 +23,15 @@ test.describe("Garage Page", () => {
     );
   });
 
-  test("Update car without mileage data", async ({ page }) => {
+  test("Add car without mileage data and cancel creating car", async ({
+    page,
+  }) => {
     await garagePage.clickAddCarButton();
     await garagePage.triggerErrorMessageForField(garagePage.mileageField);
     await expect(page.getByText(GARAGE_EMPTY_MILEAGE)).toContainText(
       "Mileage cost required"
     );
+    await garagePage.clickCancelButton();
   });
 
   test("Add BMW 3 series", async () => {
