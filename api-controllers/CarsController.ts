@@ -15,12 +15,16 @@ export default class CarsController {
                 'Cookie': `sid=${cookies}`
             }
         });
-
         return await response.json();
     }
 
     async getAllBrands() {
         const response = await this.request.get('/api/cars/brands');
+        return await response.json();
+    }
+
+    async getBrandsById(brandId: number) {
+        const response = await this.request.get(`/api/cars/brands/${brandId}`);
         return await response.json();
     }
 
