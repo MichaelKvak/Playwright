@@ -44,6 +44,7 @@ export default defineConfig({
     baseURL: `https://${process.env.USER_NAME}:${process.env.PASSWORD}@${process.env.BASE_URL}`,
 
     trace: "on-first-retry",
+    headless: false
   },
   /* Configure projects for major browsers */
   projects: [
