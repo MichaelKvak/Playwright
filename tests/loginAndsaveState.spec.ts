@@ -3,7 +3,7 @@ import HomePage from "../page-objects/pages/HomePage";
 import SignInForm from "../page-objects/forms/SignInForm";
 import { credentials } from "../test-data/usersData";
 
-test.describe.only("Setup users - get states", () => {
+test.describe("Setup users - get states", () => {
   let homePage: HomePage;
   let signInForm: SignInForm;
 
