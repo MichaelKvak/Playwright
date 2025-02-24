@@ -1,0 +1,32 @@
+name: Playwright Tests in Docker
+
+on:
+  push:
+    branches:
+      - runAfterPull  # Запускати при пуші в цю гілку
+  pull_request:
+    branches:
+      - runAfterPull  # Запускати при відкритті або оновленні PR у цю гілку
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.50.1-jammy
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
